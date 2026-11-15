@@ -9,17 +9,14 @@ import {
   MapPin,
 
   Star,
-  Trash2,
 } from "lucide-react";
 
 import BookingCard from "@/components/BookingCard";
-import { buttonVariants } from "@/components/ui/button";
 import {
   cleanDescription,
   formatDuration,
   getDestinationById,
 } from "@/lib/destinations";
-import { cn } from "@/lib/utils";
 import UpdateDestinationDailogPage from "../EditeDestination/page";
 import DeleteDestination from "@/components/DeleteDestination";
 
@@ -50,7 +47,7 @@ export default async function DestinationDetailsPage({
 }: DestinationPageProps) {
   const { id } = await params;
 
-  const destination = await getDestinationById(id);
+  const destination  = await getDestinationById(id);
 
   if (!destination) {
     notFound();
@@ -99,7 +96,7 @@ export default async function DestinationDetailsPage({
             alt={destination.name}
             fill
             priority
-            sizes="(max-width: 1024px) 100vw, 1152px"
+            sizes="(max-width: 1024px) 100vw, 1152px" 
             className="object-cover"
           />
         </div>
@@ -170,9 +167,10 @@ export default async function DestinationDetailsPage({
           </div>
 
           <BookingCard
-            name={destination.name}
-            price={destination.price}
-            departureDate={destination.departureDate}
+            // name={destination.name}
+            // price={destination.price}
+            // departureDate={destination.departureDate}
+            destination = {destination}
           />
         </div>
       </div>

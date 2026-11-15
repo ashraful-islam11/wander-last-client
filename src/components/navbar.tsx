@@ -3,7 +3,18 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { toast } from "sonner";
 
 const navLinks = [
   { label: "Home", href: "/" ,active: true},
@@ -15,6 +26,14 @@ const navLinks = [
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const {data: session} = authClient.useSession() ;
+  const user = session?.user ; 
+
+  const handleSignOut = ()=> {
+        authClient.signOut() ;
+        toast.success('successfully signout compete')
+  }
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white">
@@ -60,10 +79,45 @@ export function Navbar() {
             <Button variant="ghost" size="sm">
               Profile
             </Button>
-            <Button variant="outline" size="sm">
-              Login
-            </Button>
-            <Button size="sm">Sign Up</Button>
+
+           
+              {
+                user ?  <Popover>
+        <PopoverTrigger render={ <button>
+            <Avatar>
+                <AvatarImage referrerPolicy="no-referrer" src={user?.image as string} />
+                <AvatarFallback className='text-red-500 font-bold bg-green-400'>{user?.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+           </button> } />
+
+        <PopoverContent align="start">
+          <PopoverHeader>
+            <PopoverTitle className ="text-green-500 font-bold ">{user?.name}</PopoverTitle>
+            <PopoverDescription className='flex gap-3 items-center'>
+
+            
+              {user?.email}
+       
+                <Button onClick={handleSignOut} variant ='destructive' className =' cursor-pointer'>SignOut</Button>
+       
+            </PopoverDescription>
+          </PopoverHeader>
+        </PopoverContent>
+                        </Popover> : <>
+
+                         <Link href="/login" >
+                            <Button variant="outline" size="sm">
+                                Login
+                            </Button>
+                         </Link>     
+                              
+                        <Link href='sign-UP'>
+                           <Button size="sm">Sign Up</Button>
+                        </Link>                       
+                                      </>
+              }
+            
+         
           </div>
         </div>
       </div>
@@ -87,10 +141,14 @@ export function Navbar() {
             </ul>
           </nav>
           <div className="flex flex-col gap-2 border-t border-neutral-200 px-4 py-4">
-            <Button variant="outline" className="w-full">
+            
+              <Button variant="outline" className="w-full">
               Login
             </Button>
-            <Button className="w-full">Sign Up</Button>
+  
+         
+             <Button className="w-full">Sign Up</Button>
+
           </div>
         </div>
       )}
