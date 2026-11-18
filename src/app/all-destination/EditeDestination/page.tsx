@@ -352,6 +352,7 @@ import { cn } from "cn";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { getTokenFromClient } from "@/lib/getTokenFormClient";
 
 interface IUpdateDestinationType  {
   _id?:string, 
@@ -393,11 +394,16 @@ const UpdateDestinationDailogPage = ({destination} : {destination : IUpdateDesti
       return;
     }
     const {_id , ...updatedFormData}  = form ; 
+
+     const token  = await getTokenFromClient() 
+     console.log(token);
+
     try {
       const res = await fetch(`http://localhost:8000/destination/${destination._id}`, {
         method: "PATCH",
         headers: {
           "content-type": "application/json",
+           authorization : `Dearer ${token}`
         },
         body: JSON.stringify(updatedFormData),
       });

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+// import { notFound } from "next/navigation";
 import {
   ArrowLeft,
   CalendarDays,
@@ -19,6 +19,8 @@ import {
 } from "@/lib/destinations";
 import UpdateDestinationDailogPage from "../EditeDestination/page";
 import DeleteDestination from "@/components/DeleteDestination";
+import { notFound } from "next/navigation";
+import { GetTokenFromServer } from "@/lib/getTokenFromServer";
 
 export const dynamic = "force-dynamic";
 
@@ -47,10 +49,24 @@ export default async function DestinationDetailsPage({
 }: DestinationPageProps) {
   const { id } = await params;
 
-  const destination  = await getDestinationById(id);
+  //* cookies থেকে token নিয়ে আসি 
 
-  if (!destination) {
-    notFound();
+
+
+   const token = await GetTokenFromServer()
+   console.log('আমি টোকেন পেয়েছি', token);
+
+  const res = await fetch(`http://localhost:8000/destination/${id}`, {
+    headers : {
+      authorization: `Bearer ${token}`
+    }
+  }) ;
+  const destination = await res.json() ;
+  console.log(destination);
+
+  if (!res.ok) {
+      notFound()
+
   }
 
   const description =

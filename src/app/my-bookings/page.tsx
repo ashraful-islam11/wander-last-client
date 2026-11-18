@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import MyBookingRow, { type Booking } from "@/components/MyBookingRow";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { GetTokenFromServer } from "@/lib/getTokenFromServer";
 
 export const metadata: Metadata = {
   title: "My Bookings | Wanderlast",
@@ -47,7 +48,16 @@ export default  async function MyBookingsPage() {
     const user  =  session?.user 
     console.log(user);
 
-    const res = await fetch(`http://localhost:8000/my-booking/${user?.email}`) ;
+    const token = await GetTokenFromServer()
+
+ 
+    
+
+    const res = await fetch(`http://localhost:8000/my-booking/${user?.email}`,{
+         headers : {
+          authorization : `Bearer ${token}`
+         }
+    }) ;
     const userBookings = await res.json() ;
     console.log(userBookings);
 

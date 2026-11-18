@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/destinations";
 import { authClient } from "@/lib/auth-client";
+import { getTokenFromClient } from "@/lib/getTokenFormClient";
 
 type  BookingCardProps ={
   destination: {  
@@ -54,10 +55,14 @@ export default function BookingCard({destination}:  BookingCardProps) {
 
     }
 
+     const token = await getTokenFromClient()
+     console.log('book now', token);
+
     const res =  await fetch('http://localhost:8000/bookingDestination',{
       method:'POST',
       headers: {
-        'content-Type' : 'application/json'
+        'content-Type' : 'application/json',
+        authorization : `Bearer ${token}`
       },
       body: JSON.stringify(sendBookingDate) 
     })

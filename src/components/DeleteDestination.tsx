@@ -15,17 +15,21 @@ import { cn } from "@/lib/utils";
 import {Button, buttonVariants } from "./ui/button";
 import { Trash2 } from "lucide-react";
 import { redirect,  } from "next/navigation";
+import { getTokenFromClient } from "@/lib/getTokenFormClient";
 
 const DeleteDestination = ( {id} :{id : string}) => {
 
  
- 
-    console.log(id);
     
-   const handleDestinationDelete = async ()=> {
-      
+    const handleDestinationDelete = async ()=> {
+        
+        const token = await getTokenFromClient()
+
     const res = await fetch(`http://localhost:8000/destination/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers : {
+            authorization : `Dearer ${token}`
+        }
     })
     const data = await res.json() ;
     console.log(data);

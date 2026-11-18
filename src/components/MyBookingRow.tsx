@@ -17,6 +17,7 @@ import { formatPrice } from "@/lib/destinations";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { getTokenFromClient } from "@/lib/getTokenFormClient";
 
 export type BookingStatus = "confirmed" | "pending";
 
@@ -40,18 +41,22 @@ const statusStyles: Record<BookingStatus, string> = {
 export default function MyBookingRow({ booking }: { booking: Booking }) {
   const isConfirmed = booking.status === "confirmed";
    const router = useRouter()
+
+
   const handleBookingCancel = async ()=> {
     console.log(booking._id);
 
+    const token = await getTokenFromClient()
+
     const res = await fetch(`http://localhost:8000/my-booking-cancel/${booking?._id}`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers : {
+        authorization : `Dearer ${token}`
+      }
     });
     const result = await res.json() ;
     toast.success('successfully cancel booking destination')
     router.refresh()
-    
-
-
 
   }
 

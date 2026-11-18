@@ -15,7 +15,8 @@ const API_BASE_URL = process.env.API_URL ?? "http://localhost:8000";
 export async function getDestinations(): Promise<Destination[]> {
   try {
     const res = await fetch(`${API_BASE_URL}/destination`, {
-      cache: "no-store",
+      cache: "no-store", 
+       
     });
 
     if (!res.ok) {
@@ -30,6 +31,7 @@ export async function getDestinations(): Promise<Destination[]> {
 }
 
 export async function getDestinationById(id: string) {
+  
   const destinations = await getDestinations();
   return destinations.find((destination) => destination._id === id) ?? null;
 }
